@@ -19,8 +19,9 @@ type Clima = {
 
 app.use(cors());
 
+
 app.get("/clima", async (req, res) => {
-  await redisClient.connect();
+  
   const execStart = performance.now();
 
   const clima = await redisClient.get("clima").then(async (response) => {
@@ -39,11 +40,11 @@ app.get("/clima", async (req, res) => {
 
       res.status(201).json(jsonData);
     }
-
-    await redisClient.disconnect();
+    
     res.status(404).send();
   });
 });
-app.listen(port, () => {
+app.listen(port, async () => {
+  await redisClient.connect();
   console.log(`Server started at port ${port}`);
 });
